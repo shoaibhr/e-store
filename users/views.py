@@ -6,13 +6,14 @@ from django.contrib.auth import get_user_model
 # Create your views here.
 
 User =  get_user_model()
+
 #create user
 class CreateUser(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
+    
 #get or update user
-
 class UpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
