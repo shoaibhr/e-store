@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'password', 'phone_number' ]
+        fields = ['id','username', 'first_name', 'last_name', 'email', 'password', 'phone_number' ]
         extra_kwargs = {"password": {'write_only': True}}
     
     def create(self, validated_data):
@@ -13,8 +13,18 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     def update(self, instance, validated_data):
-        # Remove the email field from the validated_data to prevent it from being updated
+        password = validated_data.pop('password', None)
+
+        # Prevent the username and email from being updated
         validated_data.pop('email', None)
-        
-        # Call the parent update method with the remaining fields
-        return super().update(instance, validated_data)
+        validated_data.pop('username', None)
+
+        # Update other fields
+        instance = super().update(instance, validated_data)
+
+        # Handle password update
+        if password:
+            instance.set_password(password)
+            instance.save()
+
+        return instance
