@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'users',
     'products',
 ]
@@ -54,6 +55,10 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'estore.urls'
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -63,9 +68,13 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',  # For authenticated users
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '10/minute',  # 10 requests per minute for unauthenticated users
+        'anon': '50/minute',  # 10 requests per minute for unauthenticated users
         'user': '100/hour',   # 100 requests per hour for authenticated users
-    }
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,  #
+    
+   
 }
 
 
